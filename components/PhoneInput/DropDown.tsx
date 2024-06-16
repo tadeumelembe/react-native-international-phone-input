@@ -5,13 +5,16 @@ import {
   FlatList,
   TouchableOpacity,
   ListRenderItemInfo,
+  TextInput,
 } from "react-native";
-import React, { memo, useMemo } from "react";
+import React, { memo, useMemo, useState } from "react";
 import { BORDER_COLOR, BORDER_RADIUS } from "./utils/constants";
 import CountriesData from "../../assets/coutry-codes.json";
 import { CountryCodeType, DropDownProps } from "./types";
 
-const DropDown = ({ searchTerm, selectItem }: DropDownProps) => {
+const DropDown = ({ selectItem }: DropDownProps) => {
+  const [searchTerm, setSearchItem] = useState("");
+
   const memorizedCoutryData = useMemo(() => {
     if (!searchTerm) return CountriesData;
     return CountriesData.filter((el) => {
@@ -19,7 +22,7 @@ const DropDown = ({ searchTerm, selectItem }: DropDownProps) => {
         .toLocaleLowerCase()
         .includes(searchTerm.toLocaleLowerCase());
     });
-  }, []) as ArrayLike<CountryCodeType>;
+  }, [searchTerm]) as ArrayLike<CountryCodeType>;
 
   const renderItem = ({ item }: ListRenderItemInfo<CountryCodeType>) => {
     return (
@@ -37,14 +40,20 @@ const DropDown = ({ searchTerm, selectItem }: DropDownProps) => {
 
   return (
     <View style={styles.dropDown}>
-      <Text style={styles.titleHeader}>Seleciona o código do seu celular</Text>
-
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Type your country..."
+        onChangeText={(text) => setSearchItem(text)}
+      />
       <FlatList
         data={memorizedCoutryData}
         keyExtractor={(item) => item.code.toString()}
         renderItem={renderItem}
         maxToRenderPerBatch={20}
         initialNumToRender={20}
+        contentContainerStyle={{
+          paddingHorizontal: 15,
+        }}
       />
     </View>
   );
@@ -63,7 +72,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 55,
     zIndex: 10,
-    padding: 15,
+    paddingVertical: 10,
     paddingBottom: 0,
     shadowColor: "#000",
     shadowOffset: {
@@ -75,14 +84,18 @@ const styles = StyleSheet.create({
 
     elevation: 2,
   },
-  titleHeader: {
+  searchInput: {
     paddingBottom: 10,
+    borderBottomWidth: 1,
+    paddingHorizontal: 15,
+
+    borderColor: "#dedcdc",
   },
   itemContainer: {
     flexDirection: "row",
     gap: 10,
-    paddingVertical: 15,
-    borderColor: "#ccc",
-    borderBottomWidth: 1,
+    paddingVertical: 10,
+    borderColor: "#dedcdc",
+    borderBottomWidth: 0,
   },
 });
