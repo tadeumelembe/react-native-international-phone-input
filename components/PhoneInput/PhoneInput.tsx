@@ -20,6 +20,7 @@ interface Props {
   codeType?: "Flag" | "Dial_Code";
   showCode?: boolean;
   onChange: (item: onChangeItem) => void;
+  onChangeValue?: (value: string) => void;
 }
 
 const PhoneInput = ({
@@ -28,6 +29,7 @@ const PhoneInput = ({
   codeType = "Flag",
   showCode = true,
   onChange,
+  onChangeValue,
 }: Props) => {
   const deafaultCountryCodeArray = useMemo(
     () =>
@@ -46,15 +48,20 @@ const PhoneInput = ({
 
   useEffect(() => {
     const phoneNumber = new AsYouType(selectedItem.code).input(inputValue);
-    if(validatePhoneNumberLength(phoneNumber,selectedItem.code) === 'TOO_LONG') return;
+    if (
+      validatePhoneNumberLength(phoneNumber, selectedItem.code) === "TOO_LONG"
+    )
+      return;
 
-    const onChangeItem: onChangeItem= {
+    const onChangeItem: onChangeItem = {
       ...selectedItem,
-      formattedPhone:phoneNumber
-    }
-    
+      formattedPhone: phoneNumber,
+    };
+
     onChange(onChangeItem);
-    setFormatedPhoneNumber(phoneNumber)
+    if (onChangeValue) onChangeValue(phoneNumber);
+
+    setFormatedPhoneNumber(phoneNumber);
   }, [inputValue]);
 
   return (
@@ -99,7 +106,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: BORDER_RADIUS,
     borderWidth: 1,
-    borderColor:BORDER_COLOR,
+    borderColor: BORDER_COLOR,
     overflow: "hidden",
     gap: 10,
   },
