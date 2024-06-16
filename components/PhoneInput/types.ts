@@ -1,3 +1,4 @@
+import { Dispatch } from "react";
 import CountriesData from "../../assets/coutry-codes.json";
 
 export type CountryCodeRegistry = keyof (typeof CountriesData)[0];
@@ -7,6 +8,11 @@ export type CountryCodeType = Omit<(typeof CountriesData)[0], 'Code'> & {
 
 export interface onChangeItem extends CountryCodeType {
   formattedPhone: string;
+}
+
+export interface DropDownProps {
+  searchTerm?:string;
+  selectItem:Dispatch<React.SetStateAction<CountryCodeType>>;
 }
 
 export type CountryCodes =

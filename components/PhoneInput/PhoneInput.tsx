@@ -62,7 +62,7 @@ const PhoneInput = ({
     if (onChangeValue) onChangeValue(phoneNumber);
 
     setFormatedPhoneNumber(phoneNumber);
-  }, [inputValue]);
+  }, [inputValue,selectedItem.code]);
 
   return (
     <View style={{ width: "100%" }}>
@@ -90,7 +90,7 @@ const PhoneInput = ({
           />
         </View>
       </View>
-      <DropDown />
+      <DropDown selectItem={setSelectedItem} />
     </View>
   );
 };
