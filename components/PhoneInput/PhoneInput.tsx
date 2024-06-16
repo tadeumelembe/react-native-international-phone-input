@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import CountriesData from "../../assets/coutry-codes.json";
-import { CountryCodeType, CountryCodes } from "./types";
-import { AsYouType } from "libphonenumber-js";
+import { CountryCodeType, CountryCodes, onChangeItem } from "./types";
+import { AsYouType, validatePhoneNumberLength } from "libphonenumber-js";
 import DropDown from "./DropDown";
 import { BORDER_COLOR, BORDER_RADIUS } from "./utils/constants";
 
@@ -19,12 +19,12 @@ interface Props {
   defaultCode?: CountryCodes;
   codeType?: "Flag" | "Dial_Code";
   showCode?: boolean;
-  onChange?: (item: CountryCodeType) => void;
+  onChange: (item: onChangeItem) => void;
 }
 
 const PhoneInput = ({
   containerStyle,
-  defaultCode = "BR",
+  defaultCode = "US",
   codeType = "Flag",
   showCode = true,
   onChange,
@@ -42,11 +42,19 @@ const PhoneInput = ({
 
   const [inputHeight, setInputHeight] = useState(55);
   const [inputValue, setInputValue] = useState("");
+  const [formatedPhoneNumber, setFormatedPhoneNumber] = useState("");
 
   useEffect(() => {
     const phoneNumber = new AsYouType(selectedItem.code).input(inputValue);
+    if(validatePhoneNumberLength(phoneNumber,selectedItem.code) === 'TOO_LONG') return;
 
-    onChange(phoneNumber);
+    const onChangeItem: onChangeItem= {
+      ...selectedItem,
+      formattedPhone:phoneNumber
+    }
+    
+    onChange(onChangeItem);
+    setFormatedPhoneNumber(phoneNumber)
   }, [inputValue]);
 
   return (
@@ -71,6 +79,7 @@ const PhoneInput = ({
             style={{ flex: 1 }}
             keyboardType="phone-pad"
             onChangeText={(text) => setInputValue(text)}
+            value={formatedPhoneNumber}
           />
         </View>
       </View>

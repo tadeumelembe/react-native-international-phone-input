@@ -5,6 +5,10 @@ export type CountryCodeType = Omit<(typeof CountriesData)[0], 'Code'> & {
   code: CountryCodes
 }
 
+export interface onChangeItem extends CountryCodeType {
+  formattedPhone: string;
+}
+
 export type CountryCodes =
   | "AC"
   | "AD"
