@@ -18,6 +18,7 @@ interface Props {
   dropDownStyle·?: ViewProps["style"];
   defaultCode?: CountryCodes;
   codeType?: "Flag" | "Dial_Code";
+  locale?: "PT" | "EN";
   showCode?: boolean;
   onChange: (item: onChangeItem) => void;
   onChangeValue?: (value: string) => void;
@@ -26,6 +27,7 @@ interface Props {
 const PhoneInput = ({
   containerStyle,
   defaultCode = "US",
+  locale = "EN",
   codeType = "Flag",
   showCode = true,
   onChange,
@@ -42,12 +44,16 @@ const PhoneInput = ({
     deafaultCountryCodeArray[0] as CountryCodeType
   );
 
+  const [showDropdown, setShowDropdown] = useState(false);
   const [inputHeight, setInputHeight] = useState(55);
   const [inputValue, setInputValue] = useState("");
   const [formatedPhoneNumber, setFormatedPhoneNumber] = useState("");
 
   useEffect(() => {
     const phoneNumber = new AsYouType(selectedItem.code).input(inputValue);
+    console.log(
+      validatePhoneNumberLength(phoneNumber, selectedItem.code) === "TOO_LONG"
+    );
     if (
       validatePhoneNumberLength(phoneNumber, selectedItem.code) === "TOO_LONG"
     )
@@ -62,7 +68,7 @@ const PhoneInput = ({
     if (onChangeValue) onChangeValue(phoneNumber);
 
     setFormatedPhoneNumber(phoneNumber);
-  }, [inputValue,selectedItem.code]);
+  }, [inputValue, selectedItem.code]);
 
   return (
     <View style={{ width: "100%" }}>
@@ -72,7 +78,7 @@ const PhoneInput = ({
         }
         style={[styles.container, containerStyle]}
       >
-        <Pressable>
+        <Pressable onPress={() => setShowDropdown((prevState) => !prevState)}>
           <Text style={styles.codeType}>
             {codeType === "Dial_Code"
               ? selectedItem.dial_code
@@ -90,7 +96,7 @@ const PhoneInput = ({
           />
         </View>
       </View>
-      <DropDown selectItem={setSelectedItem} />
+      {showDropdown && <DropDown selectItem={setSelectedItem} />}
     </View>
   );
 };

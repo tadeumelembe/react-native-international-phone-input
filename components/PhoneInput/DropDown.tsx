@@ -9,12 +9,31 @@ import {
 } from "react-native";
 import React, { memo, useMemo, useState } from "react";
 import { BORDER_COLOR, BORDER_RADIUS } from "./utils/constants";
-import CountriesData from "../../assets/coutry-codes.json";
-import { CountryCodeType, DropDownProps } from "./types";
+import CountriesDataPT from "../../assets/coutry-codes.json";
+import CountriesDataEN from "../../assets/country-codes-en.json";
+import { CountriesLocale, CountryCodeType, DropDownProps } from "./types";
 
-const DropDown = ({ selectItem }: DropDownProps) => {
+const DropDown = ({ selectItem, locale = "EN" }: DropDownProps) => {
   const [searchTerm, setSearchItem] = useState("");
 
+  const getCuntryData = (locale: CountriesLocale):CountryCodeType[] => {
+    let CountryData = CountriesDataEN as CountryCodeType[];
+    switch (locale) {
+      case "EN":
+        CountryData = CountriesDataEN as CountryCodeType[];
+        break;
+      case "PT":
+        CountryData = CountriesDataPT as CountryCodeType[];
+        break;
+      default:
+        CountryData = CountriesDataEN as CountryCodeType[];
+        break;
+    }
+    return CountryData;
+  };
+
+  const CountriesData = getCuntryData(locale);
+  
   const memorizedCoutryData = useMemo(() => {
     if (!searchTerm) return CountriesData;
     return CountriesData.filter((el) => {
@@ -54,6 +73,20 @@ const DropDown = ({ selectItem }: DropDownProps) => {
         contentContainerStyle={{
           paddingHorizontal: 15,
         }}
+        keyboardShouldPersistTaps="always"
+        ListEmptyComponent={
+          <View>
+            <Text
+              style={{
+                textAlign: "center",
+                fontWeight: "800",
+                marginVertical: 10,
+              }}
+            >
+              Country not found
+            </Text>
+          </View>
+        }
       />
     </View>
   );

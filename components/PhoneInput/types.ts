@@ -1,9 +1,12 @@
 import { Dispatch } from "react";
 import CountriesData from "../../assets/coutry-codes.json";
 
+export type CountriesLocale ="PT"|"EN"
 export type CountryCodeRegistry = keyof (typeof CountriesData)[0];
 export type CountryCodeType = Omit<(typeof CountriesData)[0], 'Code'> & {
-  code: CountryCodes
+  code: CountryCodes,
+  unicode?: string,
+  image?:string
 }
 
 export interface onChangeItem extends CountryCodeType {
@@ -12,6 +15,7 @@ export interface onChangeItem extends CountryCodeType {
 
 export interface DropDownProps {
   selectItem:Dispatch<React.SetStateAction<CountryCodeType>>;
+  locale:CountriesLocale
 }
 
 export type CountryCodes =
