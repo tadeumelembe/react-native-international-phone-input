@@ -15,7 +15,7 @@ export interface onChangeItem extends CountryCodeType {
 
 export interface DropDownProps {
   selectItem:Dispatch<React.SetStateAction<CountryCodeType>>;
-  locale:CountriesLocale
+  locale?:CountriesLocale
 }
 
 export type CountryCodes =

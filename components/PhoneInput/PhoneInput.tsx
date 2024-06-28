@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import CountriesData from "../../assets/coutry-codes.json";
-import { CountryCodeType, CountryCodes, onChangeItem } from "./types";
+import { CountriesLocale, CountryCodeType, CountryCodes, onChangeItem } from "./types";
 import { AsYouType, validatePhoneNumberLength } from "libphonenumber-js";
 import DropDown from "./DropDown";
 import { BORDER_COLOR, BORDER_RADIUS } from "./utils/constants";
@@ -18,7 +18,7 @@ interface Props {
   dropDownStyle·?: ViewProps["style"];
   defaultCode?: CountryCodes;
   codeType?: "Flag" | "Dial_Code";
-  locale?: "PT" | "EN";
+  locale?: CountriesLocale;
   showCode?: boolean;
   onChange: (item: onChangeItem) => void;
   onChangeValue?: (value: string) => void;
@@ -96,7 +96,7 @@ const PhoneInput = ({
           />
         </View>
       </View>
-      {showDropdown && <DropDown selectItem={setSelectedItem} />}
+      {showDropdown && <DropDown locale={locale} selectItem={setSelectedItem} />}
     </View>
   );
 };
